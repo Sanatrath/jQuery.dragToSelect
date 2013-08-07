@@ -92,16 +92,16 @@ jQuery.fn.dragToSelect = function (conf) {
 		onRefresh:		function () {return true;}
 	}, c);
 
+    var parentDim = function () {
+        var parentOffset	= parent.offset();
 
-
-
-	var parentOffset	= parent.offset();
-	var parentDim	= {
-		left:	parentOffset.left, 
-		top:	parentOffset.top, 
-		width:	parent.outerWidth(), 
-		height:	parent.outerHeight()
-	};
+        return {
+            left:	parentOffset.left,
+            top:	parentOffset.top,
+            width:	parent.outerWidth(),
+            height:	parent.outerHeight()
+        };
+    };
 
 	// Current origin of select box
 	var selectBoxOrigin = {
@@ -121,8 +121,8 @@ jQuery.fn.dragToSelect = function (conf) {
 			return;
 		}
 
-		selectBoxOrigin.left	= e.pageX - parentDim.left + parent[0].scrollLeft;
-		selectBoxOrigin.top		= e.pageY - parentDim.top + parent[0].scrollTop;
+		selectBoxOrigin.left	= e.pageX - parentDim().left + parent[0].scrollLeft;
+		selectBoxOrigin.top		= e.pageY - parentDim().top + parent[0].scrollTop;
 
 		var css = {
 			left:		selectBoxOrigin.left + 'px', 
@@ -141,8 +141,8 @@ jQuery.fn.dragToSelect = function (conf) {
 			return;
 		}
 
-		var left		= e.pageX - parentDim.left + parent[0].scrollLeft;
-		var top			= e.pageY - parentDim.top + parent[0].scrollTop;
+		var left		= e.pageX - parentDim().left + parent[0].scrollLeft;
+		var top			= e.pageY - parentDim().top + parent[0].scrollTop;
 		var newLeft		= left;
 		var newTop		= top;
 		var newWidth	= selectBoxOrigin.left - newLeft;
@@ -186,19 +186,19 @@ jQuery.fn.dragToSelect = function (conf) {
 		}
 
 		// Scroll down
-		if ((e.pageY + config.scrollTH) > (parentDim.top + parentDim.height)) {
+		if ((e.pageY + config.scrollTH) > (parentDim().top + parentDim().height)) {
 			parent[0].scrollTop += config.scrollTH;
 		}
 		// Scroll up
-		if ((e.pageY - config.scrollTH) < parentDim.top) {
+		if ((e.pageY - config.scrollTH) < parentDim().top) {
 			parent[0].scrollTop -= config.scrollTH;
 		}
 		// Scroll right
-		if ((e.pageX + config.scrollTH) > (parentDim.left + parentDim.width)) {
+		if ((e.pageX + config.scrollTH) > (parentDim().left + parentDim().width)) {
 			parent[0].scrollLeft += config.scrollTH;
 		}
 		// Scroll left
-		if ((e.pageX - config.scrollTH) < parentDim.left) {
+		if ((e.pageX - config.scrollTH) < parentDim().left) {
 			parent[0].scrollLeft -= config.scrollTH;
 		}
 	};
@@ -312,14 +312,6 @@ jQuery.fn.dragToSelect = function (conf) {
 
 
 	var mousemove = function(e){
-		parentOffset	= parent.offset();
-		parentDim	= {
-			left:	parentOffset.left, 
-			top:	parentOffset.top, 
-			width:	parent.outerWidth(), 
-			height:	parent.outerHeight()
-		};
-
 		refreshSelectBox(e);
 		if (config.selectables && config.selectOnMove) {			
 			selectElementsInRange();
@@ -352,16 +344,8 @@ jQuery.fn.dragToSelect = function (conf) {
 			return;
 		}
 		
-		parentOffset	= parent.offset();
-		parentDim	= {
-			left:	parentOffset.left, 
-			top:	parentOffset.top, 
-			width:	parent.outerWidth(), 
-			height:	parent.outerHeight()
-		};
-
 		// Make sure user isn't clicking scrollbar
-		if ((e.pageX-parentDim.left+parent.scrollLeft()) > parent.innerWidth() || (e.pageY-parentDim.top+parent.scrollTop()) > parent.innerHeight()) {
+		if ((e.pageX-parentDim().left+parent.scrollLeft()) > parent.innerWidth() || (e.pageY-parentDim().top+parent.scrollTop()) > parent.innerHeight()) {
 			return;
 		}
 		
